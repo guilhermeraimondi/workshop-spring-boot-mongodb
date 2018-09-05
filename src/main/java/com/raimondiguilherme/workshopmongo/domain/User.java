@@ -1,9 +1,15 @@
 package com.raimondiguilherme.workshopmongo.domain;
 
+import org.springframework.data.annotation.Id;
+import org.springframework.data.mongodb.core.mapping.Document;
+
 import java.io.Serializable;
 import java.util.Objects;
 
+@Document(collection="user") // indicar que se trata de uma coleção do MongoDB
 public class User implements Serializable {
+
+    @Id // indicar que oq esta abaixo eh a chave
     private String id;
     private String name;
     private String email;
