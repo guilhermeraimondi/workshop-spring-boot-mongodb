@@ -5,6 +5,7 @@ import com.raimondiguilherme.workshopmongo.dto.UserDTO;
 import com.raimondiguilherme.workshopmongo.services.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
@@ -25,9 +26,15 @@ public class UserResource {
     public ResponseEntity<List<UserDTO>> findAll(){ // RE vai encapsular a estrutura necessaria pra retornar resposta http com possiveis cabecalhos, erros
 
         List<User> users = service.findAllInDatabase();
-        List<UserDTO> usersDTO = users.stream().map(x -> new UserDTO(x)).collect(Collectors.toList());
+        List<UserDTO> usersDTO = users.stream().map(UserDTO::new).collect(Collectors.toList());
         return ResponseEntity.ok().body(usersDTO); // .ok:   vai instanciar a RE ja com o codigo de resposta http que retornou com sucesso
                                                 // .body: corpo da resposta
+    }
+
+    @RequestMapping(value = "/{id}", method = RequestMethod.GET)
+    public ResponseEntity<UserDTO> findByIdDTO(@PathVariable String id){ // @PathVariable pra falar que o esse id tem q casar com o id recebido na url
+        User obj = service.findById(id);
+        return ResponseEntity.ok().body(new UserDTO(obj));
     }
 
 }
