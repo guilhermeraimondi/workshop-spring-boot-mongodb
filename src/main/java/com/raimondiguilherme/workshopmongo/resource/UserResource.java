@@ -45,4 +45,10 @@ public class UserResource {
         // retorna resposta vazia, com cod 201 e com o cabeçalho contendo a localizacao do novo rec criado
     }
 
+    @DeleteMapping(value = "/{id}")
+    public ResponseEntity<Void> delete(@PathVariable String id){
+        service.delete(id);
+        return ResponseEntity.noContent().build(); // ao deletar retorna cod 204 (sem conteudo)
+    }
+
 }
