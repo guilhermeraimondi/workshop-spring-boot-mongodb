@@ -5,11 +5,10 @@ import com.raimondiguilherme.workshopmongo.dto.UserDTO;
 import com.raimondiguilherme.workshopmongo.services.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
+import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
+import java.net.URI;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -22,7 +21,7 @@ public class UserResource {
     @Autowired
     private UserService service;
 
-    @RequestMapping(method = RequestMethod.GET) // pra dizer que este metodo vai ser o endpoint rest do caminho /users
+    @GetMapping // pra dizer que este metodo vai ser o endpoint rest do caminho /users
     public ResponseEntity<List<UserDTO>> findAll(){ // RE vai encapsular a estrutura necessaria pra retornar resposta http com possiveis cabecalhos, erros
 
         List<User> users = service.findAllInDatabase();
@@ -31,10 +30,19 @@ public class UserResource {
                                                 // .body: corpo da resposta
     }
 
-    @RequestMapping(value = "/{id}", method = RequestMethod.GET)
+    @GetMapping(value = "/{id}")
     public ResponseEntity<UserDTO> findByIdDTO(@PathVariable String id){ // @PathVariable pra falar que o esse id tem q casar com o id recebido na url
         User obj = service.findById(id);
         return ResponseEntity.ok().body(new UserDTO(obj));
+    }
+
+    @PostMapping
+    public ResponseEntity<Void> insert(@RequestBody UserDTO objDto){
+        User obj = service.userFromDto(objDto);
+        obj = service.insert(obj);
+        URI uri = ServletUriComponentsBuilder.fromCurrentRequest().path("/{id}").buildAndExpand(obj.getId()).toUri(); // pega endereço do novo objeto que vou inserir
+        return ResponseEntity.created(uri).build(); // created: retorna codigo 201 (quando se cria novo recurso)
+        // retorna resposta vazia, com cod 201 e com o cabeçalho contendo a localizacao do novo rec criado
     }
 
 }
