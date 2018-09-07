@@ -27,7 +27,7 @@ public class UserResource {
         List<User> users = service.findAllInDatabase();
         List<UserDTO> usersDTO = users.stream().map(UserDTO::new).collect(Collectors.toList());
         return ResponseEntity.ok().body(usersDTO); // .ok:   vai instanciar a RE ja com o codigo de resposta http que retornou com sucesso
-                                                // .body: corpo da resposta
+        // .body: corpo da resposta
     }
 
     @GetMapping(value = "/{id}")
@@ -49,6 +49,14 @@ public class UserResource {
     public ResponseEntity<Void> delete(@PathVariable String id){
         service.delete(id);
         return ResponseEntity.noContent().build(); // ao deletar retorna cod 204 (sem conteudo)
+    }
+
+    @PutMapping(value = "/{id}")
+    public ResponseEntity<Void> update(@RequestBody UserDTO objDto, @PathVariable String id){
+        User obj = service.userFromDto(objDto);
+        obj.setId(id);
+        obj = service.update(obj);
+        return ResponseEntity.noContent().build();
     }
 
 }
