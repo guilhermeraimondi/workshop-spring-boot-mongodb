@@ -1,7 +1,6 @@
 package com.raimondiguilherme.workshopmongo.services;
 
 import com.raimondiguilherme.workshopmongo.domain.Post;
-import com.raimondiguilherme.workshopmongo.domain.User;
 import com.raimondiguilherme.workshopmongo.repository.PostRepository;
 import com.raimondiguilherme.workshopmongo.services.exceptions.ObjectNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
